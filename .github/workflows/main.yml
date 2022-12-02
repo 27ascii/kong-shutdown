@@ -21,7 +21,7 @@ jobs:
 
       - name: Start Kong
         run: |
-          docker-compose exec kong kong reload
+          docker-compose exec -it kong kong reload
 
       - name: Sleep for 60s
         uses: jakejarvis/wait-action@master
