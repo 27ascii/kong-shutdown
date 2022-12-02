@@ -19,16 +19,16 @@ jobs:
         with:
           time: '5s'  
 
-      - name: Start Kong
+      - name: Reload kong
         run: |
           docker-compose exec -it kong kong reload
 
-      - name: Sleep for 60s
+      - name: Sleep
         uses: jakejarvis/wait-action@master
         with:
-          time: '5s'  
+          time: '70s'  
 
-      - name: Start Kong
+      - name: Show logs and shutdown
         run: |
           docker-compose logs kong
           docker-compose down
