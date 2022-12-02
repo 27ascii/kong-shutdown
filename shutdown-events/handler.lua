@@ -4,7 +4,7 @@ local dns_client = require("kong.tools.dns")(kong.configuration)
 local HOST = "httpbin.org"
 
 local function log(...)
-    kong.log.warn("++++ worker: ", ngx.worker.id(), " ", ... )
+    kong.log.warn("++++++ ", ... )
 end
 
 local function shutdown_event(premature) 
