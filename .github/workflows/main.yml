@@ -10,11 +10,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Run tests
+      - name: Start Kong
         run: |
           docker-compose up -d kong
-          sleep 2
+    
+      - name: Sleep until kong starts
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5s'  
+
+      - name: Start Kong
+        run: |
           docker-compose exec kong kong reload
-          sleep 70
+
+      - name: Sleep for 60s
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '5s'  
+
+      - name: Start Kong
+        run: |
           docker-compose logs kong
           docker-compose down
