@@ -3,7 +3,7 @@ services:
 
   kong:
     container_name: kong
-    image: kong:3.0.1
+    image: kong:3.1.0
 
     environment:
       - KONG_DATABASE=off

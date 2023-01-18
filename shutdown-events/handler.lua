@@ -1,6 +1,7 @@
 local ShutdownEvents = { PRIORITY=666, VERSION="1.0.0" }
 
-local dns_client = require("kong.tools.dns")(kong.configuration)
+local dns = require "kong.tools.dns"
+local http = require "resty.http"
 local HOST = "httpbin.org"
 
 local function log(...)
@@ -9,12 +10,18 @@ end
 
 local function shutdown_event(premature) 
     if premature and ngx.worker.exiting() then
+        
         log("attempting to resolve ", HOST)
-        local records, err, try_list = dns_client.resolve(HOST)
+        kong.dns =  dns({dns_no_sync= true})
+        local httpc = http.new()
+        local res, err = httpc:request_uri("http://httpbin.org/anything")
+
         if err then
             log("error resolving hostname: ", err)
             return
         end
+        
+        log("Status: " ..  res.status)
         log("shutdown completed")
     end
 end
