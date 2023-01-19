@@ -2,6 +2,7 @@ local ShutdownEvents = { PRIORITY=666, VERSION="1.0.0" }
 
 local dns = require "kong.tools.dns"
 local http = require "resty.http"
+local tablex = require "pl.tablex"
 local HOST = "httpbin.org"
 
 local function log(...)
@@ -10,9 +11,10 @@ end
 
 local function shutdown_event(premature) 
     if premature and ngx.worker.exiting() then
-        
         log("attempting to resolve ", HOST)
-        kong.dns =  dns({dns_no_sync= true})
+        local kong_configuration = tablex.deepcopy(getmetatable(kong.configuration))
+        kong_configuration.dns_no_sync = true
+        kong.dns = require("kong.tools.dns")(kong_configuration)
         local httpc = http.new()
         local res, err = httpc:request_uri("http://httpbin.org/anything")
 
